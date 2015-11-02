@@ -1,45 +1,65 @@
-from bottle import Bottle, run, jinja2_template as template
+from bottle import Bottle, run, request, jinja2_template as template, TEMPLATE_PATH
 import peewee
 from os import path
 import json
+import datetime
 import urllib.request as r
 
 import config
 
+TEMPLATE_PATH.append(path.join(path.abspath(path.dirname(__file__)), 'templates/'))
+
 app = Bottle()
-db = peewee.SqliteDatabase(path.join(path.abspath(path.dirname(__file__)), ('main.db')))
+db = peewee.SqliteDatabase(path.join(path.abspath(path.dirname(__file__)), 'main.db'))
 
 class Mylist(peewee.Model):
     id = peewee.IntegerField(primary_key = True)
-    smid = peewee.TextField(unique = True)
+    smid = peewee.TextField(unique = True, null = False)
     category = peewee.TextField()
     date = peewee.DateTimeField()
     last_fetched_time = peewee.DateTimeField()
-    json = peewee.TextField()
+    json_text = peewee.TextField(db_column = "json")
 
-    def data(self):
-        if not self.json:
-            res_key = "nicovideo_video_response"
-            smurl = config.NICO_API + self.smid
-            self.json = r.urlopen(smurl).read()
-            self.save()
-        return json.loads(self.json)
+    def json(self):
+        if not self.json_text:
+            self.fetch_json()
+        return json.loads(self.json_text)
+
+    def fetch_json(self):
+        res_key = "nicovideo_video_response"
+        api_url = config.NICO_API + self.smid
+        self.json_text = r.urlopen(api_url).read().decode("utf-8")
+        self.last_fetched_time = datetime.datetime.now()
+        self.save()
 
     class Meta:
         database = db
-        db_name = "mylist"
-
 
 @app.get("/")
-def index(db):
-    return
+def index():
+    try:
+        category = request.GET["category"]
+    except (KeyError):
+        category = None
+    if category == 'all':
+        lists = Mylist.select().order_by(-Mylist.id)
+    else:
+        if category == 'None': category = None
+        mylists = Mylist.select().where(Mylist.category == category).order_by(-Mylist.id)
 
-#run(app, host="0.0.0.0", port=8080, debug = True)
+    category_list = Mylist.select(peewee.fn.Distinct(Mylist.category))
 
-a = Mylist.get()
-a.json = "aaaa"
-a.update()
-print(a.id)
-print(a.smid)
-print(a.category)
-print(a.json)
+    # video json object and mylist object
+    ok_video_list = map(lambda x: (x[0]["video"], x[1]),
+        filter(lambda x: x[0]["@status"] == "ok",
+            zip([x.json()["nicovideo_video_response"] for x in mylists], mylists)
+        )
+    )
+
+    return template("index.html",
+            category_list = category_list,
+            video_list = ok_video_list,
+            category = category
+    )
+
+run(app, host="0.0.0.0", port=8080, debug = True)
