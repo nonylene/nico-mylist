@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from bottle import run, get, post, request, jinja2_template as template
 import dateutil.parser
 import bottle
@@ -42,7 +44,7 @@ def static(filepath):
 @get("/")
 def index():
     try:
-        category = request.GET["category"]
+        category = request.GET.category
         if category == 'None': category = None
     except (KeyError):
         category = None
@@ -69,8 +71,8 @@ def index():
 
 @post("/delete")
 def delete():
-    id = request.POST['id']
-    Mylist.select().where(Mylist.id == id).get().delete_instance()
+    id = request.POST.id
+    Mylist.get(Mylist.id == id).delete_instance()
     return '''
         <script type='text/javascript'>
           $('#info{0}').remove();
