@@ -43,7 +43,7 @@
           </div>
           <br/>
           <span class='upday'>
-             upload date: {{ vinfo.first_retrieve }}
+             upload date: {{ parse(vinfo.first_retrieve).strftime('%Y-%m-%d %H:%M') }}
           </span>
           <span class='length'>
             lengh: {{ vinfo.length_in_seconds }}sec.
