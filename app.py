@@ -1,6 +1,7 @@
+# /usr/bin/python3
 # coding: utf-8
 
-from bottle import run, get, post, request, jinja2_template as template
+from bottle import get, post, request, jinja2_template as template
 import dateutil.parser
 import bottle
 import peewee
@@ -43,11 +44,8 @@ def static(filepath):
 
 @get("/")
 def index():
-    try:
-        category = request.GET.category
-        if category == 'None': category = None
-    except (KeyError):
-        category = None
+    category = request.GET.category
+    if category in ['None', ''] : category = None
 
     if category == 'all':
         lists = Mylist.select().order_by(-Mylist.id)
@@ -91,4 +89,9 @@ def move():
     response += "</script>"
     return response
 
-run(host="0.0.0.0", port=8080, debug = True)
+# subdirectory
+app = bottle.Bottle()
+app.mount(config.RUN_DIRECTORY, bottle.default_app())
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8080, debug=True)
