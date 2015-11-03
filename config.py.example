@@ -1,0 +1,2 @@
+NICO_API = "http://example.com/?v="
+RUN_DIRECTORY = "/example"
