@@ -78,4 +78,17 @@ def delete():
           $('#info{0}').remove();
         </script>'''.format(id)
 
+@post("/move")
+def move():
+    ids = json.loads(request.POST.id)
+    cate = request.POST.category
+    response = "<script type='text/javascript'>\n"
+    for id in ids:
+        mylist = Mylist.get(Mylist.id == id)
+        mylist.category = cate
+        mylist.save()
+        response += "$('#info{0}').remove();\n".format(id)
+    response += "</script>"
+    return response
+
 run(host="0.0.0.0", port=8080, debug = True)
