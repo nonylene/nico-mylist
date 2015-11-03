@@ -1,4 +1,6 @@
-from bottle import Bottle, run, request, jinja2_template as template, TEMPLATE_PATH
+from bottle import run, get, request, jinja2_template as template
+import dateutil.parser
+import bottle
 import peewee
 from os import path
 import json
@@ -7,9 +9,7 @@ import urllib.request as r
 
 import config
 
-TEMPLATE_PATH.append(path.join(path.abspath(path.dirname(__file__)), 'templates/'))
-
-app = Bottle()
+bottle.TEMPLATE_PATH.append(path.join(path.abspath(path.dirname(__file__)), 'templates/'))
 db = peewee.SqliteDatabase(path.join(path.abspath(path.dirname(__file__)), 'main.db'))
 
 class Mylist(peewee.Model):
@@ -35,7 +35,13 @@ class Mylist(peewee.Model):
     class Meta:
         database = db
 
-@app.get("/")
+
+
+@get('/static/<filepath:path>', name="static")
+def static(filepath):
+    return bottle.static_file(filepath, root="static/")
+
+@get("/")
 def index():
     try:
         category = request.GET["category"]
@@ -59,7 +65,9 @@ def index():
     return template("index.html",
             category_list = category_list,
             video_list = ok_video_list,
-            category = category
+            category = category,
+            url = bottle.url,
+            parse = dateutil.parser.parse
     )
 
-run(app, host="0.0.0.0", port=8080, debug = True)
+run(host="0.0.0.0", port=8080, debug = True)

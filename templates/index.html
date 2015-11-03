@@ -2,8 +2,8 @@
 
 
 {% block head %}
-  <link rel="stylesheet" type="text/css" href="{ static 'nico/nico.css' }"/>
-  <script src="{ static 'nico/nico.js' }"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url('static', filepath='nico.css') }}"/>
+  <script src="{{ url('static', filepath='nico.js') }}"></script>
 {% endblock %}
 
 {% block wrapper %}
