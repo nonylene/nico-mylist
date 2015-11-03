@@ -35,8 +35,6 @@ class Mylist(peewee.Model):
     class Meta:
         database = db
 
-
-
 @get('/static/<filepath:path>', name="static")
 def static(filepath):
     return bottle.static_file(filepath, root="static/")
@@ -56,11 +54,9 @@ def index():
     category_list = Mylist.select(peewee.fn.Distinct(Mylist.category))
 
     # video json object and mylist object
-    ok_video_list = map(lambda x: (x[0]["video"], x[1]),
-        filter(lambda x: x[0]["@status"] == "ok",
-            zip([x.json()["nicovideo_video_response"] for x in mylists], mylists)
-        )
-    )
+    ok_video_list = [(x[0]["video"], x[1])
+        for x in zip([x.json()["nicovideo_video_response"] for x in mylists], mylists)
+    if x[0]["@status"] == "ok"]
 
     return template("index.html",
             category_list = category_list,
