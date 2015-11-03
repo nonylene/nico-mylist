@@ -3,17 +3,17 @@ mylist app with local db, for nico api v1.
 
 ## dependencies
 
-python >= 3.2
+- python >= 3.2
 
 ### pip
-bottle
-dateutil
-peewee
-jinja2
+- bottle
+- dateutil
+- peewee
+- jinja2
 
 ### deploy
 1. install above packages
-2. `python3 utils/init_db.py`
+2. `python3 utils/setup_db.py`
 3. `python3 app.py`
 
 #### gunicorn
