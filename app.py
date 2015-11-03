@@ -1,4 +1,4 @@
-from bottle import run, get, request, jinja2_template as template
+from bottle import run, get, post, request, jinja2_template as template
 import dateutil.parser
 import bottle
 import peewee
@@ -43,12 +43,13 @@ def static(filepath):
 def index():
     try:
         category = request.GET["category"]
+        if category == 'None': category = None
     except (KeyError):
         category = None
+
     if category == 'all':
         lists = Mylist.select().order_by(-Mylist.id)
     else:
-        if category == 'None': category = None
         mylists = Mylist.select().where(Mylist.category == category).order_by(-Mylist.id)
 
     category_list = Mylist.select(peewee.fn.Distinct(Mylist.category))
@@ -65,5 +66,14 @@ def index():
             url = bottle.url,
             parse = dateutil.parser.parse
     )
+
+@post("/delete")
+def delete():
+    id = request.POST['id']
+    Mylist.select().where(Mylist.id == id).get().delete_instance()
+    return '''
+        <script type='text/javascript'>
+          $('#info{0}').remove();
+        </script>'''.format(id)
 
 run(host="0.0.0.0", port=8080, debug = True)
