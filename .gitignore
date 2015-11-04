@@ -60,3 +60,4 @@ target/
 
 # nony
 *.db
+config.py
