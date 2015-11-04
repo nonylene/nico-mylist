@@ -48,7 +48,7 @@ def index():
     if category in ['None', ''] : category = None
 
     if category == 'all':
-        lists = Mylist.select().order_by(-Mylist.id)
+        mylists = Mylist.select().order_by(-Mylist.id)
     else:
         mylists = Mylist.select().where(Mylist.category == category).order_by(-Mylist.id)
 
