@@ -89,6 +89,13 @@ def move():
     response += "</script>"
     return response
 
+@post("/add")
+def add():
+    smid = request.POST.smid
+    Mylist.create(smid = smid, date = datetime.datetime.now())
+    response = "<script type='text/javascript'>\n"
+    return response
+
 # subdirectory
 app = bottle.Bottle()
 app.mount(config.RUN_DIRECTORY, bottle.default_app())

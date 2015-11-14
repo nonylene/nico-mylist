@@ -30,6 +30,19 @@ $(function(){
     });
   });
 
+  $('#add').click(function(){
+    smid = $("#addsm").val()
+    $.ajax({
+      type: 'POST',
+      url: 'add',
+      data: {
+        'smid': smid,
+      }
+    }).done(function(data){
+      $('#wrapper').append(data);
+    });
+  });
+
   $('#move').click(function(){
     category = $('#catsel').val();
     location.href = '?category=' + category ;

@@ -22,6 +22,11 @@
       <input type='button' value='checkall' id='chkall'>
       <input type='button' value='uncheckall' id='unchk'>
 
+      <span id="adds">
+        <input type='text' id='addsm'>
+        <input type='button' value='add' id='add'>
+      </span>
+
       {% for vinfo, sminfo in video_list %}
       <div class="info" id='info{{ sminfo.id }}' smid='{{ sminfo.smid }}'>
         <div class='head'>
