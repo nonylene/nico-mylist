@@ -8,13 +8,13 @@ $(function(){
         'id': id,
       }
     }).done(function(data){
-      $('#wrapper').append(data);
+      $('#info' + data["message"]).remove()
     });
   });
 
   $('.move').click(function(){
-    id = $(this).attr('num');
-    category = $('#catsel' + id).val();
+    var id = $(this).attr('num');
+    var category = $('#catsel' + id).val();
     if (category == 'new'){
       category = $('#form' + id).val();
     }
@@ -26,7 +26,9 @@ $(function(){
         'category': category,
       }
     }).done(function(data){
-      $('#wrapper').append(data);
+      data["message"].forEach(function(removeId) {
+        $('#info' + removeId).remove()
+      })
     });
   });
 
@@ -39,7 +41,11 @@ $(function(){
         'smid': smid,
       }
     }).done(function(data){
-      $('#wrapper').append(data);
+      if (confirm("success! reload?")) {
+        location.href = '?category=None'
+      }
+    }).fail(function(data){
+      alert("error!: " + data.responseJSON["error_message"])
     });
   });
 
@@ -64,7 +70,9 @@ $(function(){
         'category': category,
         }
       }).done(function(data){
-        $('#wrapper').append(data);
+        data["message"].forEach(function(removeId) {
+          $('#info' + removeId).remove()
+        })
       });
     }else{
       alert('all には移動できません');

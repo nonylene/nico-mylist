@@ -1,13 +1,14 @@
 # /usr/bin/python3
 # coding: utf-8
 
-from bottle import get, post, request, jinja2_template as template
+from bottle import get, post, request, response, jinja2_template as template
 import dateutil.parser
 import bottle
 import peewee
 import json
 import datetime
 import urllib.request as r
+import re
 from os import path
 
 import config
@@ -69,32 +70,42 @@ def index():
 
 @post("/delete")
 def delete():
+    response.content_type = "application/json"
     id = request.POST.id
     Mylist.get(Mylist.id == id).delete_instance()
-    return '''
-        <script type='text/javascript'>
-          $('#info{0}').remove();
-        </script>'''.format(id)
+    return success_msg(id)
 
 @post("/move")
 def move():
+    response.content_type = "application/json"
     ids = json.loads(request.POST.id)
     cate = request.POST.category
-    response = "<script type='text/javascript'>\n"
+    if cate == "None": cate = None
     for id in ids:
         mylist = Mylist.get(Mylist.id == id)
         mylist.category = cate
         mylist.save()
-        response += "$('#info{0}').remove();\n".format(id)
-    response += "</script>"
-    return response
+    return success_msg(ids)
 
 @post("/add")
 def add():
+    response.content_type = "application/json"
     smid = request.POST.smid
+    if not re.compile("(sm|nm)\d+").search(smid):
+        response.status = 400
+        return error_msg("Id must start with sm or nm!")
+    if Mylist.select().where(Mylist.smid == smid).exists():
+        response.status = 400
+        return error_msg("You already added this id!")
     Mylist.create(smid = smid, date = datetime.datetime.now())
-    response = "<script type='text/javascript'>\n"
-    return response
+    return success_msg(smid)
+
+def success_msg(message = None):
+    return {"status": "success", "message": message}
+
+def error_msg(message = None):
+    return {"status": "error", "error_message": message}
+
 
 # subdirectory
 app = bottle.Bottle()
