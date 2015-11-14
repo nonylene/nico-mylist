@@ -1,6 +1,6 @@
 $(function(){
   $('.delete').click(function(){
-    id = $(this).attr('num')
+    var id = $(this).attr('num')
     $.ajax({
       type: 'POST',
       url: 'delete',
@@ -33,7 +33,7 @@ $(function(){
   });
 
   $('#add').click(function(){
-    smid = $("#addsm").val()
+    var smid = $("#addsm").val()
     $.ajax({
       type: 'POST',
       url: 'add',
@@ -50,12 +50,12 @@ $(function(){
   });
 
   $('#move').click(function(){
-    category = $('#catsel').val();
+    var category = $('#catsel').val();
     location.href = '?category=' + category ;
   });
 
   $('#movechk').click(function(){
-    category = $('#catsel').val();
+    var category = $('#catsel').val();
     if (category !== "all"){
       var ids = [];
       ids = $('input:checkbox:checked').map(function(){
