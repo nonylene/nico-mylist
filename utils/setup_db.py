@@ -6,7 +6,7 @@ conn = sqlite3.connect(path.join(path.abspath(path.dirname(__file__)), ('../main
 sql = conn.cursor()
 sql.execute("drop table if exists mylist")
 sql.execute("""create table if not exists mylist (
-    id int primary key not null,
+    id int primary key autoincrement,
     smid text unique,
     category text,
     date timestamp,
