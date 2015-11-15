@@ -21,6 +21,11 @@ $(function(){
     requestMove([id], category)
   });
 
+  $('.reload').click(function(){
+    var id = $(this).attr('num');
+    requestReload([id])
+  });
+
   $('#add').click(function(){
     var smid = $("#addsm").val()
     $.ajax({
@@ -30,7 +35,7 @@ $(function(){
         'smid': smid,
       }
     }).done(function(data){
-      if (confirm("success! reload?")) {
+      if (confirm("success! Go to top?")) {
         location.href = '?category=None'
       }
     }).fail(function(data){
@@ -56,6 +61,14 @@ $(function(){
     }
   });
 
+  $('#reloadchk').click(function(){
+    var ids = $('input:checkbox:checked').map(function(){
+      checkid =  $(this).attr('id');
+      return checkid.slice(5)
+    }).get();
+    requestReload(ids)
+  });
+
   $('#chkall').click(function(){
     $('input:checkbox:not(:checked)').map(function(){
       $(this).prop('checked',true);
@@ -69,17 +82,31 @@ $(function(){
   });
 
   function requestMove(ids, category) {
-      $.ajax({
-        type: 'POST',
-        url: 'move',
-        data: {
+    $.ajax({
+      type: 'POST',
+      url: 'move',
+      data: {
         'id': JSON.stringify(ids),
         'category': category,
-        }
-      }).done(function(data){
-        data["message"].forEach(function(removeId) {
-          $('#info' + removeId).remove()
-        })
-      });
+      }
+    }).done(function(data){
+      data["message"].forEach(function(removeId) {
+        $('#info' + removeId).remove()
+      })
+    });
+  }
+
+  function requestReload(ids) {
+    $.ajax({
+      type: 'POST',
+      url: 'reload',
+      data: {
+        'id': JSON.stringify(ids),
+      }
+    }).done(function(data){
+      if (confirm("success! reload?")) {
+        location.reload()
+      }
+    });
   }
 });

@@ -87,6 +87,15 @@ def move():
         mylist.save()
     return success_msg(ids)
 
+@post("/reload")
+def reload():
+    response.content_type = "application/json"
+    ids = json.loads(request.POST.id)
+    for id in ids:
+        mylist = Mylist.get(Mylist.id == id)
+        mylist.fetch_json()
+    return success_msg(ids)
+
 @post("/add")
 def add():
     response.content_type = "application/json"
