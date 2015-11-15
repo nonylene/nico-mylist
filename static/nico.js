@@ -18,18 +18,7 @@ $(function(){
     if (category == 'new'){
       category = $('#form' + id).val();
     }
-    $.ajax({
-      type: 'POST',
-      url: 'move',
-      data: {
-        'id': JSON.stringify([id]),
-        'category': category,
-      }
-    }).done(function(data){
-      data["message"].forEach(function(removeId) {
-        $('#info' + removeId).remove()
-      })
-    });
+    requestMove([id], category)
   });
 
   $('#add').click(function(){
@@ -57,23 +46,11 @@ $(function(){
   $('#movechk').click(function(){
     var category = $('#catsel').val();
     if (category !== "all"){
-      var ids = [];
-      ids = $('input:checkbox:checked').map(function(){
+      var ids = $('input:checkbox:checked').map(function(){
         checkid =  $(this).attr('id');
         return checkid.slice(5)
       }).get();
-      $.ajax({
-        type: 'POST',
-        url: 'move',
-        data: {
-        'id': JSON.stringify(ids),
-        'category': category,
-        }
-      }).done(function(data){
-        data["message"].forEach(function(removeId) {
-          $('#info' + removeId).remove()
-        })
-      });
+      requestMove(ids, category)
     }else{
       alert('all には移動できません');
     }
@@ -90,4 +67,19 @@ $(function(){
       $(this).prop('checked',false);
     })
   });
+
+  function requestMove(ids, category) {
+      $.ajax({
+        type: 'POST',
+        url: 'move',
+        data: {
+        'id': JSON.stringify(ids),
+        'category': category,
+        }
+      }).done(function(data){
+        data["message"].forEach(function(removeId) {
+          $('#info' + removeId).remove()
+        })
+      });
+  }
 });
