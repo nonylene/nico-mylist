@@ -9,24 +9,26 @@
 {% block wrapper %}
       <h1>MYNICONICOMYLIST</h1>
       <h2>category: {{ category }}</h2>
-      <select id='catsel'>
-        <option value='all'>all</option>
+      <div id='buttons'>
+        <select id='catsel'>
+          <option value='all'>all</option>
 
-        {% for cat in category_list %}
-        <option value='{{ cat.category }}'>{{ cat.category }}</option>
-        {% endfor %}
+          {% for cat in category_list %}
+          <option value='{{ cat.category }}'>{{ cat.category }}</option>
+          {% endfor %}
 
-      </select>
-      <input type='button' value='select' id='move'>
-      <input type='button' value='movechecked' id='movechk'>
-      <input type='button' value='reloadchecked' id='reloadchk'>
-      <input type='button' value='checkall' id='chkall'>
-      <input type='button' value='uncheckall' id='unchk'>
+        </select>
+        <input type='button' value='select' id='move'>
+        <input type='button' value='movechecked' id='movechk'>
+        <input type='button' value='reloadchecked' id='reloadchk'>
+        <input type='button' value='checkall' id='chkall'>
+        <input type='button' value='uncheckall' id='unchk'>
 
-      <span id="adds">
-        <input type='text' id='addsm'>
-        <input type='button' value='add' id='add'>
-      </span>
+        <span id="adds">
+          <input type='text' id='addsm' size='12'>
+          <input type='button' value='add' id='add'>
+        </span>
+      </div>
 
       {% for vinfo, sminfo in video_list %}
       <div class="info" id='info{{ sminfo.id }}' smid='{{ sminfo.smid }}'>
