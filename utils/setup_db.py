@@ -1,7 +1,7 @@
 import sqlite3
 from os import path
 
-conn = sqlite3.connect(path.join(path.abspath(path.dirname(__file__)), ('../main.db')))
+conn = sqlite3.connect(path.join(path.abspath(path.dirname(__file__)), ('../app/data/main.db')))
 
 sql = conn.cursor()
 sql.execute("drop table if exists mylist")

@@ -9,12 +9,20 @@ import json
 import datetime
 import urllib.request as r
 import re
-from os import path
+import os
 
-import config
+from . import config
 
-bottle.TEMPLATE_PATH.append(path.join(path.abspath(path.dirname(__file__)), 'templates/'))
-db = peewee.SqliteDatabase(path.join(path.abspath(path.dirname(__file__)), 'main.db'))
+
+file_dir = os.path.abspath(os.path.dirname(__file__))
+
+bottle.TEMPLATE_PATH.append(
+        os.path.join(file_dir, 'templates/')
+        )
+
+db = peewee.SqliteDatabase(
+    os.path.join(file_dir, 'data/main.db')
+    )
 
 class Mylist(peewee.Model):
     id = peewee.IntegerField(primary_key = True)
