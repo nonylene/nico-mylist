@@ -49,7 +49,7 @@ class Mylist(peewee.Model):
 
 @get('/static/<filepath:path>', name="static")
 def static(filepath):
-    return bottle.static_file(filepath, root="static/")
+    return bottle.static_file(filepath, root="app/static/")
 
 @get("/")
 def index():
