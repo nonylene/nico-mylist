@@ -4,12 +4,13 @@ mylist app with local db, for nico api v1.
 ## dependencies
 
 - python >= 3.2
+- pipenv
 
-### pip
-- bottle
-- dateutil
-- peewee
-- jinja2
+## Setup
+
+```sh
+$ pipenv install
+```
 
 ## deploy
 1. install above packages
@@ -17,7 +18,7 @@ mylist app with local db, for nico api v1.
 3. `python3 app.py`
 
 ### gunicorn
-`gunicorn app:app --bind <address>`
+`$ pipenv run gunicorn app:app --bind <address>`
 
 ## screenshot
 

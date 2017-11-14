@@ -1,0 +1,18 @@
+[[source]]
+
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+
+[packages]
+
+bottle = "*"
+python-dateutil = "*"
+gunicorn = "*"
+peewee = "*"
+"Jinja2" = "*"
+
+
+[dev-packages]
+
