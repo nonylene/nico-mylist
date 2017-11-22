@@ -7,11 +7,11 @@ import bottle
 import peewee
 import json
 import datetime
-import urllib.request as r
 import re
 import os
 
 from . import config
+from .model import Mylist
 
 
 file_dir = os.path.abspath(os.path.dirname(__file__))
@@ -19,33 +19,6 @@ file_dir = os.path.abspath(os.path.dirname(__file__))
 bottle.TEMPLATE_PATH.append(
         os.path.join(file_dir, 'templates/')
         )
-
-db = peewee.SqliteDatabase(
-    os.path.join(file_dir, 'data/main.db')
-    )
-
-class Mylist(peewee.Model):
-    id = peewee.IntegerField(primary_key = True)
-    smid = peewee.TextField(unique = True, null = False)
-    category = peewee.TextField()
-    date = peewee.DateTimeField()
-    last_fetched_time = peewee.DateTimeField()
-    json_text = peewee.TextField(db_column = "json")
-
-    def json(self):
-        if not self.json_text:
-            self.fetch_json()
-        return json.loads(self.json_text)
-
-    def fetch_json(self):
-        res_key = "nicovideo_video_response"
-        api_url = config.NICO_API + self.smid
-        self.json_text = r.urlopen(api_url).read().decode("utf-8")
-        self.last_fetched_time = datetime.datetime.now()
-        self.save()
-
-    class Meta:
-        database = db
 
 @get('/static/<filepath:path>', name="static")
 def static(filepath):
